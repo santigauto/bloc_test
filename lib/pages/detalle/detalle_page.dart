@@ -1,5 +1,12 @@
+import 'package:bloc_test/models/nave/nave_model.dart';
+import 'package:bloc_test/models/pelicula/pelicula_model.dart';
 import 'package:bloc_test/models/personaje/personaje_model.dart';
-import 'package:bloc_test/pages/inicio/widgets/carta.dart';
+import 'package:bloc_test/models/vehiculo/vehiculo_model.dart';
+import 'package:bloc_test/pages/detalle/widgets/detalle_appbar.dart';
+import 'package:bloc_test/pages/detalle/widgets/relacionados_list.dart';
+import 'package:bloc_test/services/naves_service.dart';
+import 'package:bloc_test/services/peliculas_service.dart';
+import 'package:bloc_test/services/vehiculos_service.dart';
 import 'package:flutter/material.dart';
 
 class DetallePage extends StatefulWidget {
@@ -50,14 +57,20 @@ class _DetallePageState extends State<DetallePage>
         children: [
           CustomScrollView(controller: _scrollController, slivers: [
             //make sliver appbar with overflow in profile picture
-            _profileAppBar(size, context, personaje),
+            DetailAppBar(
+              animationController: animationController, 
+              colorAnimation: colorAnimation, 
+              size: size, 
+              context: context, 
+              personaje: personaje
+              ),
             //make sliver list with profile info
             SliverList(
                 delegate: SliverChildListDelegate([
-              _description(context, size, personaje),
-              SizedBox(height: size.height * 0.05),
-              _details(context, size, personaje),
-              SizedBox(height: size.height * 0.35),
+                  _details(context, size, personaje),
+                  SizedBox(height: size.height * 0.05),
+                  Relacionados(personaje: personaje),
+                  SizedBox(height: size.height * 0.35),
             ]))
           ]),
         ],
@@ -65,92 +78,6 @@ class _DetallePageState extends State<DetallePage>
     );
   }
 
-  SliverAppBar _profileAppBar(
-      Size size, BuildContext context, Personaje personaje) {
-    return SliverAppBar(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      automaticallyImplyLeading: false,
-      expandedHeight: size.height * 0.35,
-      floating: false,
-      pinned: true,
-      elevation: 0,
-      flexibleSpace: FlexibleSpaceBar(
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedBuilder(
-                animation: animationController,
-                builder: (context, _) {
-                  return Text(
-                    personaje.name ?? '',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 17,
-                        color: colorAnimation.value),
-                  );
-                })
-          ],
-        ),
-        centerTitle: true,
-        background: Stack(
-          alignment: Alignment.center,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).appBarTheme.backgroundColor,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black45,
-                          blurRadius: 5,
-                          spreadRadius: 2,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(height: 9, color: const Color(0xFF555555)),
-                Expanded(
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                ),
-              ],
-            ),
-            Hero(
-              tag: personaje.name ?? '',
-              child: Center(
-                child: Container(
-                  width: size.width * 0.4,
-                  height: size.width * 0.4,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Theme.of(context).appBarTheme.backgroundColor!,
-                      width: 7,
-                    ),
-                  ),
-                  child: GeneroAvatar(genero: personaje.gender ?? ''),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _description(BuildContext context, Size size, Personaje personaje) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: size.width * 0.15),
-      child: Center(child: Text(personaje.homeworld ?? '')),
-    );
-  }
 
   _details(BuildContext context, Size size, Personaje personaje) {
     return Column(
@@ -161,14 +88,26 @@ class _DetallePageState extends State<DetallePage>
           trailing: Text(personaje.birthYear ?? 'no se sabe'),
         ),
         ListTile(
-          title: Text('Color de pelo:'),
+          title: const Text('Color de pelo:'),
           trailing: Text(personaje.hairColor ?? ''),
         ),
         ListTile(
-          title: Text('Color de piel:'),
+          title: const Text('Color de piel:'),
           trailing: Text(personaje.skinColor ?? ''),
         ),
+        ListTile(
+          title: const Text('Color de ojos:'),
+          trailing: Text(personaje.eyeColor ?? ''),
+        ),
+        ListTile(
+          title: Text('Genero:'),
+          trailing: Text(personaje.gender ?? ''),
+        )
       ],
     );
   }
 }
+
+
+
+

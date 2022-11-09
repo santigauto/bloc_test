@@ -22,6 +22,11 @@ class MyApp extends StatelessWidget {
       routes: getApplicationRoutes(),
       initialRoute: '/',
       theme: Theme.of(context).copyWith(
+        primaryColor: Colors.yellow,
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: Colors.yellow,
+              secondary: Colors.yellow
+            ),
           backgroundColor: Colors.grey,
           appBarTheme:
               AppBarTheme.of(context).copyWith(backgroundColor: Colors.black),

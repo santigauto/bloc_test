@@ -7,6 +7,7 @@ part 'personajes_event.dart';
 class PersonajesBloc extends Bloc<PersonajesEvent, Personajes?> {
   PersonajesBloc() : super(null) {
     on<FetchPersonajesEvent>((event, emit) async {
+      
       emit(event.personajes);
     });
   }

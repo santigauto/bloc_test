@@ -10,7 +10,16 @@ class PersonajesRepo {
   final int _personajesPorPagina = 10;
   final int? paginaActual;
 
-  Stream<Personajes> get getPersonajes async* {
+//SERVICIO FUTURE DE PERSONAJES EN CASO DE QUERER USAR PAGINADO
+  Future<Personajes> getFuturePersonajes(int paginaActual) async {
+    final url = Uri.https(_urlBase, 'api/people', {'page': '1'});
+    final resp = await http.get(url);
+    final decodedData = json.decode(resp.body);
+    final personajes = Personajes.fromJson(decodedData);
+    return personajes;
+  }
+//SERVICIO STREAM DE PERSONAJES EN CASO DE QUERER USAR INFINITE SCROLL
+  Stream<Personajes> get getStreamPersonajes async* {
     var url = Uri.https(_urlBase, 'api/people', {'page': '$paginaActual'});
 
     final response = await http.get(url);
@@ -23,6 +32,14 @@ class PersonajesRepo {
     }
   }
 
+  Future<Personajes> getPersonajesByName(String name) async {
+    final url = Uri.https(_urlBase, 'api/people', {'search': name});
+    final resp = await http.get(url);
+    final decodedData = json.decode(resp.body);
+    final personajes = Personajes.fromJson(decodedData);
+    return personajes;
+  }
+
   final StreamController<int> _paginasController = StreamController<int>();
   Stream<int> get paginas => _paginasController.stream;
 
@@ -31,7 +48,7 @@ class PersonajesRepo {
   Stream<List<Personaje>> get listaPersonajes => _personajesController.stream;
 
   PersonajesRepo({this.paginaActual = 2}) {
-    getPersonajes.listen((event) {
+    getStreamPersonajes.listen((event) {
       int aux = (event.count! / _personajesPorPagina).ceil();
       _paginasController.add(aux);
       _personajesController.add(event.results ?? []);

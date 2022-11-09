@@ -1,4 +1,4 @@
-import 'package:bloc_test/bloc/personajes_bloc.dart';
+import 'package:bloc_test/services/personajes_service.dart';
 import 'package:flutter/material.dart';
 
 class PaginadorWidget extends StatefulWidget {
@@ -19,7 +19,6 @@ class _PaginadorWidgetState extends State<PaginadorWidget> {
         builder: (context, AsyncSnapshot<int> snapshot) {
           if (snapshot.hasData) {
             int cantidad = snapshot.data ?? 0;
-            print(cantidad);
             return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -27,7 +26,7 @@ class _PaginadorWidgetState extends State<PaginadorWidget> {
                     backgroundColor: Colors.black,
                     child: IconButton(
                       onPressed: () {
-                        print('anterior');
+                        //print('anterior');
                       },
                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
                     ),
@@ -64,7 +63,7 @@ class _PaginadorWidgetState extends State<PaginadorWidget> {
                     child: IconButton(
                       onPressed: () {
                         setState(() {});
-                        print('siguiente');
+                        //print('siguiente');
                       },
                       icon: const Icon(Icons.arrow_forward_ios_rounded),
                     ),

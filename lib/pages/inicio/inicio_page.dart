@@ -1,6 +1,7 @@
-import 'package:bloc_test/bloc/personajes_bloc.dart';
+import 'package:bloc_test/services/personajes_service.dart';
 import 'package:bloc_test/models/personaje/personaje_model.dart';
 import 'package:bloc_test/pages/inicio/widgets/carta.dart';
+import 'package:bloc_test/widgets/buscador.dart';
 import 'package:flutter/material.dart';
 
 class InicioPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _InicioPageState extends State<InicioPage> {
 
   @override
   void initState() {
-    persBloc.getPersonajes;
+    persBloc.getStreamPersonajes;
     super.initState();
   }
 
@@ -26,7 +27,6 @@ class _InicioPageState extends State<InicioPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _appBar(),
-      drawer: _drawer(),
       body: _lista(size),
     );
   }
@@ -72,39 +72,17 @@ class _InicioPageState extends State<InicioPage> {
 
   AppBar _appBar() {
     return AppBar(
-      title: const Text('Inicio'),
-      actions: const [IconButton(onPressed: null, icon: Icon(Icons.search))],
+      title: const Center(child: Text('Inicio')),
+      actions:  [
+        IconButton(
+          onPressed: (){
+            //search delegate
+            showSearch(context: context, delegate: Buscador());
+          }, 
+          icon: const Icon(Icons.search, color: Colors.white,)
+        )],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     );
   }
 
-  Drawer _drawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: const <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Drawer Header',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.message),
-            title: Text('Item 1'),
-          ),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Item 2'),
-          ),
-        ],
-      ),
-    );
-  }
 }

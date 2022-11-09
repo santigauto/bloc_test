@@ -2,12 +2,21 @@
 
 /* Buscador de personajes */
 
+import 'package:bloc_test/models/personaje/personajes_model.dart';
+import 'package:bloc_test/pages/inicio/widgets/carta.dart';
+import 'package:bloc_test/services/personajes_service.dart';
 import 'package:flutter/material.dart';
 
 class Buscador extends SearchDelegate {
+
+  @override
+  // ignore: overridden_fields
+  final String? searchFieldLabel;
+  Buscador({this.searchFieldLabel = 'Buscar...'});
+
+
   @override
   List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
     return [
       IconButton(
         icon: const Icon(Icons.clear),
@@ -20,7 +29,6 @@ class Buscador extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       onPressed: () {
@@ -31,13 +39,30 @@ class Buscador extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return ListTile(
-      title: Text(query),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/R2-D2_Droid.png/220px-R2-D2_Droid.png'),
-      ),
+    query = query.trim();
+
+    return FutureBuilder<Personajes>(
+      future: PersonajesRepo().getPersonajesByName(query),
+      builder: (context, snapshot) {
+        if(snapshot.hasError){
+          return const Center(child: Text('Error al cargar los datos'));
+        }
+        if (snapshot.hasData) {
+          final personajes = snapshot.data?.results ?? [];
+          return (personajes.isNotEmpty) ? ListView.builder(
+            itemCount: personajes.length,
+            itemBuilder: (context, index) {
+              return CartaWidget(personaje: personajes[index]);
+            },
+          ) : const ListTile(
+            title: Text('No se encontraron resultados'),
+          ); 
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      }
     );
   }
 
