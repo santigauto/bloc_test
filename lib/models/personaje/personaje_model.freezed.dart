@@ -290,7 +290,8 @@ class __$$_PersonajeCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake)
 class _$_Personaje implements _Personaje {
   const _$_Personaje(
       {this.name,

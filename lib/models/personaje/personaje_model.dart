@@ -4,7 +4,10 @@ part 'personaje_model.freezed.dart';
 part 'personaje_model.g.dart';
 
 @freezed
-class Personaje with _$Personaje{
+class Personaje with _$Personaje {
+  @JsonSerializable(
+    fieldRename: FieldRename.snake, // <---
+  )
   const factory Personaje({
     String? name,
     String? height,
@@ -24,6 +27,6 @@ class Personaje with _$Personaje{
     String? url,
   }) = _Personaje;
 
-  factory Personaje.fromJson(Map<String, dynamic> json) 
-    => _$PersonajeFromJson(json);
+  factory Personaje.fromJson(Map<String, dynamic> json) =>
+      _$PersonajeFromJson(json);
 }

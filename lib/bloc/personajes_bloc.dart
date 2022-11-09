@@ -1,31 +1,45 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc_test/models/personaje/personaje_model.dart';
+import 'package:bloc_test/models/personaje/personajes_model.dart';
 import 'package:http/http.dart' as http;
 
-class PersonajesBloc{
+class PersonajesBloc {
   final String _urlBase = 'swapi.dev';
-  //final int _personajesPorPagina = 10;
-  final int _paginaActual = 1;
+  final int _personajesPorPagina = 10;
+  final int? paginaActual;
 
-
-  Stream<List<Personaje>> get getPersonajes async* {
-
-    var url = Uri.https(_urlBase, 'api/people', {'page': '$_paginaActual'});
+  Stream<Personajes> get getPersonajes async* {
+    var url = Uri.https(_urlBase, 'api/people', {'page': '$paginaActual'});
 
     final response = await http.get(url);
     final Map<String, dynamic> decodedData = json.decode(response.body);
 
-    if(response.statusCode == 200){
-      final List<Personaje> personajes = [];
+    if (response.statusCode == 200) {
+      final personajes = Personajes.fromJson(decodedData);
 
-      for(Map<String, dynamic> per in decodedData['results']){
-        final personaje = Personaje.fromJson(per);
-        personajes.add(personaje);
-        yield personajes;
-      }
-      
+      yield personajes;
     }
   }
-  
+
+  final StreamController<int> _paginasController = StreamController<int>();
+  Stream<int> get paginas => _paginasController.stream;
+
+  final StreamController<List<Personaje>> _personajesController =
+      StreamController<List<Personaje>>.broadcast();
+  Stream<List<Personaje>> get listaPersonajes => _personajesController.stream;
+
+  PersonajesBloc({this.paginaActual = 2}) {
+    getPersonajes.listen((event) {
+      int aux = (event.count! / _personajesPorPagina).ceil();
+      _paginasController.add(aux);
+      _personajesController.add(event.results ?? []);
+    });
+  }
+
+  dispose() {
+    _paginasController.close();
+    _personajesController.close();
+  }
 }
