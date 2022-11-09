@@ -73,6 +73,8 @@ class _InicioPageState extends State<InicioPage> {
   AppBar _appBar() {
     return AppBar(
       title: const Text('Inicio'),
+      actions: const [IconButton(onPressed: null, icon: Icon(Icons.search))],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
     );
   }
 
