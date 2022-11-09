@@ -9,7 +9,7 @@ class PaginadorWidget extends StatefulWidget {
 }
 
 class _PaginadorWidgetState extends State<PaginadorWidget> {
-  PersonajesBloc persBloc = PersonajesBloc();
+  PersonajesRepo persBloc = PersonajesRepo();
   int actualPage = 1;
   @override
   Widget build(BuildContext context) {

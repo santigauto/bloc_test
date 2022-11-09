@@ -1,14 +1,13 @@
 import 'package:bloc/bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bloc_test/models/personaje/personajes_model.dart';
+import 'package:equatable/equatable.dart';
 
 part 'personajes_event.dart';
-part 'personajes_state.dart';
-part 'personajes_bloc.freezed.dart';
 
-class PersonajesBloc extends Bloc<PersonajesEvent, PersonajesState> {
-  PersonajesBloc() : super(const _Initial()) {
-    on<PersonajesEvent>((event, emit) {
-      // TODO: implement event handler
+class PersonajesBloc extends Bloc<PersonajesEvent, Personajes?> {
+  PersonajesBloc() : super(null) {
+    on<FetchPersonajesEvent>((event, emit) async {
+      emit(event.personajes);
     });
   }
 }

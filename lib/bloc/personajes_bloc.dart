@@ -5,7 +5,7 @@ import 'package:bloc_test/models/personaje/personaje_model.dart';
 import 'package:bloc_test/models/personaje/personajes_model.dart';
 import 'package:http/http.dart' as http;
 
-class PersonajesBloc {
+class PersonajesRepo {
   final String _urlBase = 'swapi.dev';
   final int _personajesPorPagina = 10;
   final int? paginaActual;
@@ -30,7 +30,7 @@ class PersonajesBloc {
       StreamController<List<Personaje>>.broadcast();
   Stream<List<Personaje>> get listaPersonajes => _personajesController.stream;
 
-  PersonajesBloc({this.paginaActual = 2}) {
+  PersonajesRepo({this.paginaActual = 2}) {
     getPersonajes.listen((event) {
       int aux = (event.count! / _personajesPorPagina).ceil();
       _paginasController.add(aux);

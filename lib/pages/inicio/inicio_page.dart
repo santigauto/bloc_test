@@ -11,7 +11,7 @@ class InicioPage extends StatefulWidget {
 }
 
 class _InicioPageState extends State<InicioPage> {
-  final persBloc = PersonajesBloc();
+  final persBloc = PersonajesRepo();
   int actualPage = 1;
   final ScrollController _scrollController = ScrollController();
 
