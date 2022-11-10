@@ -1,6 +1,7 @@
+import 'package:bloc_test/pages/inicio/widgets/formulario.dart';
 import 'package:bloc_test/services/personajes_service.dart';
 import 'package:bloc_test/models/personaje/personaje_model.dart';
-import 'package:bloc_test/pages/inicio/widgets/carta.dart';
+import 'package:bloc_test/widgets/carta.dart';
 import 'package:bloc_test/widgets/buscador.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,8 @@ class _InicioPageState extends State<InicioPage> {
   int actualPage = 1;
   final ScrollController _scrollController = ScrollController();
 
+ 
+
   @override
   void initState() {
     persBloc.getStreamPersonajes;
@@ -28,14 +31,24 @@ class _InicioPageState extends State<InicioPage> {
     return Scaffold(
       appBar: _appBar(),
       body: _lista(size),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.person_add_alt_1_rounded, color: Colors.black,),
+        onPressed: () {
+          formularioDialog(context);
+        },
+      ),
     );
   }
+
+  
 
   @override
   void dispose() {
     persBloc.dispose();
     super.dispose();
   }
+
+  
 
   StreamBuilder<List<Personaje>> _lista(Size size) {
     return StreamBuilder(
@@ -61,6 +74,9 @@ class _InicioPageState extends State<InicioPage> {
                   return CartaWidget(personaje: personajes[index]);
                 },
               ),
+              /* Positioned(
+                bottom: 0,
+                child: PaginadorWidget()) */ //
             ],
           );
         } else {
@@ -70,19 +86,37 @@ class _InicioPageState extends State<InicioPage> {
     );
   }
 
+  //funcion que espera el pop del dialog y guarda el personaje
+
   AppBar _appBar() {
     return AppBar(
-      title: const Center(child: Text('Inicio')),
-      actions:  [
-        IconButton(
-          onPressed: (){
-            //search delegate
-            showSearch(context: context, delegate: Buscador());
-          }, 
-          icon: const Icon(Icons.search, color: Colors.white,)
-        )],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      title: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Center(child: Text('SWAPI')),
+          Positioned(
+            right: 0,
+            child: IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: Buscador(),
+                );
+              },
+              icon: Icon(
+                Icons.search,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(20.0)),
     );
   }
-
 }

@@ -1,5 +1,5 @@
 import 'package:bloc_test/models/personaje/personaje_model.dart';
-import 'package:bloc_test/pages/inicio/widgets/carta.dart';
+import 'package:bloc_test/widgets/genero_avatar.dart';
 import 'package:flutter/material.dart';
 
 class DetailAppBar extends StatelessWidget {

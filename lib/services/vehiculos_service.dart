@@ -17,6 +17,7 @@ class VehiculosService {
           final vehiculo = Vehiculo.fromJson(decodedData);
           vehiculos.add(vehiculo);
         }catch(e){
+          // ignore: avoid_print
           print(e);
         }
       }

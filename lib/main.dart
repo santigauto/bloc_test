@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc/personajes/personajes_bloc.dart';
 import 'package:bloc_test/routes/page_routes.dart';
+import 'package:bloc_test/themes/sw_theme.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       routes: getApplicationRoutes(),
       initialRoute: '/',
-      theme: Theme.of(context).copyWith(
-        primaryColor: Colors.yellow,
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: Colors.yellow,
-              secondary: Colors.yellow
-            ),
-          backgroundColor: Colors.grey,
-          appBarTheme:
-              AppBarTheme.of(context).copyWith(backgroundColor: Colors.black),
-          scaffoldBackgroundColor: Colors.grey[300]),
+      theme: swTheme(context),
     );
   }
 }

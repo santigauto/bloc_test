@@ -1,4 +1,5 @@
 import 'package:bloc_test/models/personaje/personaje_model.dart';
+import 'package:bloc_test/widgets/genero_avatar.dart';
 import 'package:flutter/material.dart';
 
 class CartaWidget extends StatefulWidget {
@@ -52,7 +53,7 @@ class _CartaWidgetState extends State<CartaWidget>
           alignment: Alignment.center,
           children: [
             Positioned(
-                top: size.height * 0.05 * (_animation.value),
+                top: size.height * 0.025 * (_animation.value),
                 left: size.width * 0.05,
                 child: Container(
                   height: size.width * 0.2,
@@ -72,11 +73,11 @@ class _CartaWidgetState extends State<CartaWidget>
                 )),
             Container(
               width: size.width * 0.7,
-              height: size.height * 0.15,
+              height: size.height * 0.1,
               margin: EdgeInsets.all(size.width * 0.05),
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(width: 3.0, color: Colors.yellow),
                 boxShadow: [
@@ -104,7 +105,7 @@ class _CartaWidgetState extends State<CartaWidget>
               ),
             ),
             Positioned(
-              top: size.height * 0.05 * (_animation.value),
+              top: size.height * 0.025 * (_animation.value),
               left: size.width * 0.05,
               child: Hero(
                 tag: widget.personaje.name ?? '',
@@ -121,24 +122,4 @@ class _CartaWidgetState extends State<CartaWidget>
   }
 }
 
-class GeneroAvatar extends StatelessWidget {
-  const GeneroAvatar({
-    Key? key,
-    required this.genero,
-  }) : super(key: key);
 
-  final String genero;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Image(
-          image: (genero == "male")
-              ? const AssetImage('assets/icon-male.png')
-              : (genero == "female")
-                  ? const AssetImage('assets/icon-female.png')
-                  : const AssetImage('assets/icon-robot.png')),
-    );
-  }
-}

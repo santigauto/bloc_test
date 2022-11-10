@@ -40,6 +40,18 @@ class PersonajesRepo {
     return personajes;
   }
 
+  Future<bool> sendPersonaje(String characterName, String dateTime){
+    final url = Uri.https(
+      _urlBase, 'api/people', 
+      {
+        'name': characterName, 
+        'date': DateTime.now().toString(),
+        'id': 1 // TODO contorl de id
+      });
+    final resp = http.post(url);
+    return resp.then((value) => value.statusCode == 200);
+  }
+
   final StreamController<int> _paginasController = StreamController<int>();
   Stream<int> get paginas => _paginasController.stream;
 
