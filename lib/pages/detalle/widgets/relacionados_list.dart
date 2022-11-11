@@ -91,7 +91,7 @@ class _RelacionadosState extends State<Relacionados> {
       builder: (BuildContext context, AsyncSnapshot<List<Especie>> snapshot) {
         if (snapshot.hasData) {
           return ExpansionTile(
-            leading: const Icon(Icons.pets),
+            leading: Icon(Icons.public), //icono planeta
             title: const Text('Especies'),
             children: snapshot.data!
                 .map((e) => ListTile(title: Text(e.name ?? '')))
@@ -99,6 +99,7 @@ class _RelacionadosState extends State<Relacionados> {
           );
         } else {
           return const ListTile(
+            leading: Icon(Icons.public),
               title: Text('Especies'), trailing: CircularProgressIndicator());
         }
       },
@@ -119,6 +120,7 @@ class _RelacionadosState extends State<Relacionados> {
           );
         } else {
           return const ListTile(
+            leading: Icon(Icons.movie),
               title: Text('Peliculas'), trailing: CircularProgressIndicator());
         }
       },
@@ -139,6 +141,7 @@ class _RelacionadosState extends State<Relacionados> {
           );
         } else {
           return const ListTile(
+              leading: Icon(Icons.rocket),
               title: Text('Naves'), trailing: CircularProgressIndicator());
         }
       },
@@ -159,6 +162,7 @@ class _RelacionadosState extends State<Relacionados> {
           );
         } else {
           return const ListTile(
+            leading: Icon(Icons.directions_car),
               title: Text('Vehiculos'), trailing: CircularProgressIndicator());
         }
       },

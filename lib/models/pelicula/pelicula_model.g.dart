@@ -6,6 +6,7 @@ part of 'pelicula_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_Pelicula _$$_PeliculaFromJson(Map<String, dynamic> json) => _$_Pelicula(
       title: json['title'] as String?,
       episodeId: json['episodeId'] as int?,
@@ -31,6 +32,7 @@ _$_Pelicula _$$_PeliculaFromJson(Map<String, dynamic> json) => _$_Pelicula(
       url: json['url'] as String?,
     );
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> _$$_PeliculaToJson(_$_Pelicula instance) =>
     <String, dynamic>{
       'title': instance.title,

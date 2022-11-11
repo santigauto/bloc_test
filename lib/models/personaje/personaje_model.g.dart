@@ -6,6 +6,7 @@ part of 'personaje_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_Personaje _$$_PersonajeFromJson(Map<String, dynamic> json) => _$_Personaje(
       name: json['name'] as String?,
       height: json['height'] as String?,
@@ -30,6 +31,7 @@ _$_Personaje _$$_PersonajeFromJson(Map<String, dynamic> json) => _$_Personaje(
       url: json['url'] as String?,
     );
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> _$$_PersonajeToJson(_$_Personaje instance) =>
     <String, dynamic>{
       'name': instance.name,

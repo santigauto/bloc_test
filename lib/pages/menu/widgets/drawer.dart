@@ -99,8 +99,6 @@ class _MyDrawerState extends State<MyDrawer> {
                   onChanged: (value) {
                     BlocProvider.of<ConexionBloc>(context)
                         .add(SwitchConexionEvent(value));
-                    print(value);
-                    setState(() => null);
                   },
                   value: state.conexion,
                   title: const Text('Conexión'),

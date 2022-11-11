@@ -8,6 +8,7 @@ class CustomInput extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool isMultiline;
   final Widget? icon;
+  final TextInputType? inputType;
   const CustomInput(
       {Key? key,
       required this.controller,
@@ -16,7 +17,7 @@ class CustomInput extends StatelessWidget {
       this.validator,
       this.onChanged,
       this.isMultiline = false,
-      this.icon})
+      this.icon, this.inputType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -24,6 +25,7 @@ class CustomInput extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+        keyboardType: inputType,
         controller: controller,
         onChanged: onChanged,
         maxLines: isMultiline ? 2 : 1,

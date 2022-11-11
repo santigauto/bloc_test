@@ -8,7 +8,6 @@ part 'conexion_state.dart';
 class ConexionBloc extends Bloc<ConexionEvent, ConexionState> {
   ConexionBloc() : super(const InicialConexionState()) {
     on<SwitchConexionEvent>((event, emit) {
-      print('switch');
       emit(SwitchConexionState(value: event.conexion));
     });
   }

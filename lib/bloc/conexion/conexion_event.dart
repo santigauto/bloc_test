@@ -13,6 +13,5 @@ class SwitchConexionEvent extends ConexionEvent {
   const SwitchConexionEvent(this.conexion);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [super.props];
 }

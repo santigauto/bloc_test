@@ -6,6 +6,7 @@ part of 'personajes_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_Personajes _$$_PersonajesFromJson(Map<String, dynamic> json) =>
     _$_Personajes(
       count: json['count'] as int?,
@@ -16,6 +17,7 @@ _$_Personajes _$$_PersonajesFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> _$$_PersonajesToJson(_$_Personajes instance) =>
     <String, dynamic>{
       'count': instance.count,

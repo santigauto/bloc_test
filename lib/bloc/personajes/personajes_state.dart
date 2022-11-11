@@ -2,14 +2,13 @@ part of 'personajes_bloc.dart';
 
 @immutable
 abstract class PersonajesState extends Equatable {
-  final Personajes? personajes;
 
-  const PersonajesState({this.personajes});
+  const PersonajesState();
 }
 //TODO STATES INICIAL, LOADING, LOADED
 
 class PersonajesInicialState extends PersonajesState {
-  const PersonajesInicialState() : super(personajes: null);
+  const PersonajesInicialState() : super();
   @override
   List<Object?> get props => [];
 }
@@ -20,15 +19,25 @@ class LoadingPersonajesState extends PersonajesState {
   @override
   List<Object?> get props => [];
 }
-
-class PersonajesAddState extends PersonajesState {
-  final Personajes pers;
-  const PersonajesAddState({required this.pers}) : super(personajes: pers);
-  @override
-  List<Object?> get props => [];
-}
-
 class PersonajesFetchState extends PersonajesState {
+  final List<Personaje> pers;
+  const PersonajesFetchState({required this.pers}) : super();
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [pers];
 }
+
+//error state
+class PersonajesErrorState extends PersonajesState {
+  final Personajes pers;
+  const PersonajesErrorState({required this.pers}) : super();
+  @override
+  List<Object?> get props => [pers];
+}
+class PersonajesAddState extends PersonajesState {
+  final String error;
+  const PersonajesAddState(this.error) : super();
+  @override
+  List<Object?> get props => [error];
+}
+
+

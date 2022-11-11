@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc/conexion/conexion_bloc.dart';
 import 'package:bloc_test/bloc/personajes/personajes_bloc.dart';
-import 'package:bloc_test/models/personaje/personajes_model.dart';
 import 'package:bloc_test/models/personaje/personaje_model.dart';
+import 'package:bloc_test/pages/inicio/widgets/formulario.dart';
 import 'package:bloc_test/services/personajes_service.dart';
 import 'package:bloc_test/widgets/carta.dart';
 import 'package:bloc_test/widgets/buscador.dart';
@@ -17,7 +17,6 @@ class InicioPage extends StatefulWidget {
 }
 
 class _InicioPageState extends State<InicioPage> {
-  int actualPage = 1;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -30,14 +29,18 @@ class _InicioPageState extends State<InicioPage> {
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<ConexionBloc, ConexionState>(
       builder: (context, state) {
-        return Scaffold(
+        return BlocProvider(
+      create: (context) =>
+          PersonajesBloc(RepositoryProvider.of<PersonajesRepo>(context))
+            ..add(LoadingPersonajesEvent()),
+          child: Scaffold(
           appBar: _appBar(state.conexion),
           body: (state.conexion)
-              ? _bodyWithConnection()
+              ? _bodyWithConnection(size)
               : _bodyWithoutConnection(), // _lista(size),
           floatingActionButton:
               state.conexion ? _floatingButton(context) : null,
-        );
+        ));
       },
     );
   }
@@ -48,43 +51,59 @@ class _InicioPageState extends State<InicioPage> {
         Icons.person_add_alt_1_rounded,
         color: Colors.black,
       ),
-      onPressed: () {
-        print('llego');
-        BlocProvider.of<PersonajesBloc>(context, listen: false).add(
-            const AddPersonajeEvent(
-                Personajes(count: 1, results: [Personaje(name: 'Santiago')])));
-        //formularioDialog(context);
+      onPressed: () async{
+        
+        String? name = await formularioDialog(context);
+        if (name != null) {
+          //snackbar
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Personaje $name agregado'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
       },
     );
   }
 
-  Widget _bodyWithConnection() {
-    return BlocProvider(
-      create: (context) =>
-          PersonajesBloc(/* RepositoryProvider.of<PersonajesRepo>(context) */)
-            ..add(LoadingPersonajesEvent()),
-      child: BlocBuilder<PersonajesBloc, PersonajesState>(
-          builder: (context, state) => (state is LoadingPersonajesState)
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : (state.personajes != null)
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      controller: _scrollController
-                        ..addListener(() {
-                          if (_scrollController.offset ==
-                              _scrollController.position.maxScrollExtent) {
-                            //TODO use this controller to call personajes stream method
-                          }
-                        }),
-                      itemCount: state.personajes!.results!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return CartaWidget(
-                            personaje: state.personajes!.results![index]);
-                      },
-                    )
-                  : const NoDataBanner()),
+  Widget _bodyWithConnection(Size size) {
+    return BlocBuilder<PersonajesBloc, PersonajesState>(
+        builder: (context, state)  {
+          switch (state.runtimeType) {
+            case PersonajesInicialState:
+              return const NoDataBanner();
+            case LoadingPersonajesState:
+              return const Center(child: CircularProgressIndicator());
+            case PersonajesFetchState:
+            List<Personaje> pers = state.props[0] as List<Personaje>;
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const ScrollPhysics(),
+                controller: _scrollController
+                  ..addListener(() {
+                    if (_scrollController.offset ==
+                        _scrollController.position.maxScrollExtent) {
+                          //TODO cargar mas personajes
+
+                          RepositoryProvider.of<PersonajesRepo>(context).getStreamPersonajes.listen((event) {
+                            BlocProvider.of<PersonajesBloc>(context).add(
+                              FetchPersonajesEvent(event.results!)
+                            );
+                          }); //me sobreescribe la lista, no adhiere
+                    }
+                  }),
+                itemCount: pers.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return CartaWidget(personaje: pers[index]);
+                },
+                );
+            case PersonajesAddState:
+              return const Center(child: Text('PersonajesAddState'));
+            default:
+              return const Center(child: CircularProgressIndicator());
+          }}
     );
   }
 
@@ -98,7 +117,7 @@ class _InicioPageState extends State<InicioPage> {
               height: 250,
               child: Image(image: AssetImage('assets/jarjar.png'))),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
               'Esta aplicación definitivamente no maneja información de vital importancia para el imperio',
               textAlign: TextAlign.center,
@@ -114,41 +133,6 @@ class _InicioPageState extends State<InicioPage> {
     super.dispose();
   }
 
-  /* _lista(Size size) {
-    return StreamBuilder(
-      stream: persBloc.listaPersonajes,
-      builder: (BuildContext context, AsyncSnapshot<List<Personaje>> snapshot) {
-        if (snapshot.hasData) {
-          List<Personaje> personajes = snapshot.data ?? [];
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const ScrollPhysics(),
-                controller: _scrollController
-                  ..addListener(() {
-                    if (_scrollController.offset ==
-                        _scrollController.position.maxScrollExtent) {
-                      //TODO use this controller to call personajes stream method
-                    }
-                  }),
-                itemCount: personajes.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return CartaWidget(personaje: personajes[index]);
-                },
-              ),
-              /* Positioned(
-                bottom: 0,
-                child: PaginadorWidget()) */ //ADD THIS BAR IF WANT PAGER
-            ],
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  } */
 
   //funcion que espera el pop del dialog y guarda el personaje
 
@@ -184,4 +168,6 @@ class _InicioPageState extends State<InicioPage> {
           borderRadius: BorderRadius.circular(20.0)),
     );
   }
+
+  
 }

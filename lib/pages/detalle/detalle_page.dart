@@ -87,7 +87,7 @@ class _DetallePageState extends State<DetallePage>
     return ListTile(
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       trailing: Text(detail ?? 'no se sabe'),
     );

@@ -15,18 +15,20 @@ class LoadingPersonajesEvent extends PersonajesEvent {
 }
 
 class FetchPersonajesEvent extends PersonajesEvent {
-  const FetchPersonajesEvent();
+  final List<Personaje> personajes;
+  const FetchPersonajesEvent(this.personajes);
+
+  @override
+  List<Object?> get props => [personajes];
+}
+
+class AddPersonajeEvent extends PersonajesEvent {
+  final Personaje personaje;
+  const AddPersonajeEvent(this.personaje);
 
   @override
   List<Object?> get props => [];
 }
-
-class AddPersonajeEvent extends PersonajesEvent {
-  final Personajes personajes;
-
-  const AddPersonajeEvent(this.personajes);
-}
-
 class LostConectionEvent extends PersonajesEvent {
   final Personajes personajes = const Personajes(count: 0, results: []);
   const LostConectionEvent();

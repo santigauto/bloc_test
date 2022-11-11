@@ -6,6 +6,7 @@ part of 'especie_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_Especie _$$_EspecieFromJson(Map<String, dynamic> json) => _$_Especie(
       averageHeight: json['averageHeight'] as String?,
       averageLifespan: json['averageLifespan'] as String?,
@@ -26,6 +27,7 @@ _$_Especie _$$_EspecieFromJson(Map<String, dynamic> json) => _$_Especie(
       url: json['url'] as String?,
     );
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> _$$_EspecieToJson(_$_Especie instance) =>
     <String, dynamic>{
       'averageHeight': instance.averageHeight,

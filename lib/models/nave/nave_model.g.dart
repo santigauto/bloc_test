@@ -6,6 +6,7 @@ part of 'nave_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_Nave _$$_NaveFromJson(Map<String, dynamic> json) => _$_Nave(
       mglt: json['mglt'] as String?,
       cargoCapacity: json['cargo_capacity'] as String?,
@@ -28,6 +29,7 @@ _$_Nave _$$_NaveFromJson(Map<String, dynamic> json) => _$_Nave(
       url: json['url'] as String?,
     );
 
+// ignore: non_constant_identifier_names
 Map<String, dynamic> _$$_NaveToJson(_$_Nave instance) => <String, dynamic>{
       'mglt': instance.mglt,
       'cargo_capacity': instance.cargoCapacity,

@@ -8,14 +8,15 @@ import 'package:http/http.dart' as http;
 class PersonajesRepo {
   final String _urlBase = 'swapi.dev';
   final int _personajesPorPagina = 10;
-  final int? paginaActual;
+  int paginaActual = 1;
 
 //SERVICIO FUTURE DE PERSONAJES EN CASO DE QUERER USAR PAGINADO
-  Future<Personajes> getFuturePersonajes(int paginaActual) async {
-    final url = Uri.https(_urlBase, 'api/people', {'page': '1'});
+  Future<Personajes> getFuturePersonajes() async {
+    final url = Uri.https(_urlBase, 'api/people', {'page': paginaActual.toString()});
     final resp = await http.get(url);
     final decodedData = json.decode(resp.body);
     final personajes = Personajes.fromJson(decodedData);
+    paginaActual++;
     return personajes;
   }
 //SERVICIO STREAM DE PERSONAJES EN CASO DE QUERER USAR INFINITE SCROLL
@@ -27,7 +28,7 @@ class PersonajesRepo {
 
     if (response.statusCode == 200) {
       final personajes = Personajes.fromJson(decodedData);
-
+      paginaActual++;
       yield personajes;
     }
   }
@@ -40,16 +41,15 @@ class PersonajesRepo {
     return personajes;
   }
 
-  Future<bool> sendPersonaje(String characterName, String dateTime){
-    final url = Uri.https(
-      _urlBase, 'api/people', 
-      {
-        'name': characterName, 
-        'date': DateTime.now().toString(),
-        'id': 1 // TODO contorl de id
-      });
-    final resp = http.post(url);
-    return resp.then((value) => value.statusCode == 200);
+  Future crearPersonaje({required String id,required String datetime,required  String name }) async {
+    final url = Uri.https('jsonplaceholder.typicode.com', 'posts');
+    final resp = await http.post(url, body: {
+      'userId': int.parse(id),
+      'dateTime': datetime,
+      'character_name': name,
+    });
+    final decodedData = json.decode(resp.body);
+    return decodedData;
   }
 
   final StreamController<int> _paginasController = StreamController<int>();
