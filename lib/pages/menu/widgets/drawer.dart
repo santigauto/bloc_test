@@ -1,11 +1,16 @@
+import 'package:bloc_test/bloc/conexion/conexion_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyDrawer extends StatefulWidget {
   final double width;
   final double height;
-  //final Widget profilePic;
-  // ignore: use_key_in_widget_constructors
-  const MyDrawer({required this.width, required this.height});
+
+  const MyDrawer({
+    super.key,
+    required this.width,
+    required this.height,
+  });
 
   @override
   State<MyDrawer> createState() => _MyDrawerState();
@@ -78,27 +83,35 @@ class _MyDrawerState extends State<MyDrawer> {
 
   Widget _lista(context) {
     return Expanded(
-      child: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (overscroll) {
-            overscroll.disallowIndicator();
-            return true;
-          },
-          child: ListView(
-            physics: const ClampingScrollPhysics(),
-            children: [
-              SwitchListTile(
-                onChanged: (value) {},
-                value: true,
-                title: const Text('Conexión'),
-                secondary: const Icon(Icons.wifi),
-                /* leading: Icon(Icons.wifi), */
-              ),
-            ],
-          ),
+        child: Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return true;
+        },
+        child: ListView(
+          physics: const ClampingScrollPhysics(),
+          children: [
+            BlocBuilder<ConexionBloc, ConexionState>(
+              builder: (context, state) {
+                return SwitchListTile(
+                  onChanged: (value) {
+                    BlocProvider.of<ConexionBloc>(context)
+                        .add(SwitchConexionEvent(value));
+                    print(value);
+                    setState(() => null);
+                  },
+                  value: state.conexion,
+                  title: const Text('Conexión'),
+                  secondary: const Icon(Icons.wifi),
+                  /* leading: Icon(Icons.wifi), */
+                );
+              },
+            ),
+          ],
         ),
-      )
-    );
+      ),
+    ));
   }
 }

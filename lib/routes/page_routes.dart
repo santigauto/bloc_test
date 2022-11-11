@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 Map<String, Widget Function(BuildContext)> getApplicationRoutes() {
   return <String, Widget Function(BuildContext)>{
     '/': (BuildContext context) => const MenuPage(
-      child: InicioPage(),
-    ),
+        child:
+            InicioPage() /* RepositoryProvider(
+            create: (context) => PersonajesRepo(),
+            child: const InicioPage(),
+          ), */
+        ),
     'detalle': (BuildContext context) => const DetallePage()
   };
 }

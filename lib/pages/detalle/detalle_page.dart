@@ -1,12 +1,6 @@
-import 'package:bloc_test/models/nave/nave_model.dart';
-import 'package:bloc_test/models/pelicula/pelicula_model.dart';
 import 'package:bloc_test/models/personaje/personaje_model.dart';
-import 'package:bloc_test/models/vehiculo/vehiculo_model.dart';
 import 'package:bloc_test/pages/detalle/widgets/detalle_appbar.dart';
 import 'package:bloc_test/pages/detalle/widgets/relacionados_list.dart';
-import 'package:bloc_test/services/naves_service.dart';
-import 'package:bloc_test/services/peliculas_service.dart';
-import 'package:bloc_test/services/vehiculos_service.dart';
 import 'package:flutter/material.dart';
 
 class DetallePage extends StatefulWidget {
@@ -58,19 +52,17 @@ class _DetallePageState extends State<DetallePage>
           CustomScrollView(controller: _scrollController, slivers: [
             //make sliver appbar with overflow in profile picture
             DetailAppBar(
-              animationController: animationController, 
-              colorAnimation: colorAnimation, 
-              size: size, 
-              context: context, 
-              personaje: personaje
-              ),
+                animationController: animationController,
+                colorAnimation: colorAnimation,
+                size: size,
+                context: context,
+                personaje: personaje),
             //make sliver list with profile info
             SliverList(
                 delegate: SliverChildListDelegate([
-                  _details(context, size, personaje),
-                  SizedBox(height: size.height * 0.05),
-                  Relacionados(personaje: personaje),
-                  SizedBox(height: size.height * 0.35),
+              _details(context, size, personaje),
+              SizedBox(height: size.height * 0.05),
+              Relacionados(personaje: personaje),
             ]))
           ]),
         ],
@@ -78,36 +70,26 @@ class _DetallePageState extends State<DetallePage>
     );
   }
 
-
   _details(BuildContext context, Size size, Personaje personaje) {
     return Column(
       children: [
         const Divider(),
-        ListTile(
-          title: const Text('Fecha de nacimiento:'),
-          trailing: Text(personaje.birthYear ?? 'no se sabe'),
-        ),
-        ListTile(
-          title: const Text('Color de pelo:'),
-          trailing: Text(personaje.hairColor ?? ''),
-        ),
-        ListTile(
-          title: const Text('Color de piel:'),
-          trailing: Text(personaje.skinColor ?? ''),
-        ),
-        ListTile(
-          title: const Text('Color de ojos:'),
-          trailing: Text(personaje.eyeColor ?? ''),
-        ),
-        ListTile(
-          title: Text('Genero:'),
-          trailing: Text(personaje.gender ?? ''),
-        )
+        _detailTile('Año de nacimiento:', personaje.birthYear),
+        _detailTile('Color de pelo:', personaje.hairColor),
+        _detailTile('Color de piel:', personaje.skinColor),
+        _detailTile('Color de ojos:', personaje.eyeColor),
+        _detailTile('Genero:', personaje.gender)
       ],
     );
   }
+
+  ListTile _detailTile(String title, String? detail) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      trailing: Text(detail ?? 'no se sabe'),
+    );
+  }
 }
-
-
-
-
