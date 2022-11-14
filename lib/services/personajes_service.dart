@@ -46,7 +46,7 @@ class PersonajesRepo {
     final resp = await http.post(url, body: {
       'userId': int.parse(id),
       'dateTime': datetime,
-      'character_name': name,
+      'character_name': name, 
     });
     final decodedData = json.decode(resp.body);
     return decodedData;

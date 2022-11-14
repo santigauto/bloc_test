@@ -10,7 +10,7 @@ Future<dynamic> formularioDialog(BuildContext context) {
   _submit(){
     if(formKey.currentState!.validate()){
       PersonajesRepo().crearPersonaje(
-        id: idController.text, 
+        id: idController.text.toString(), 
         datetime: DateTime.now().toString(), 
         name: nameController.text);
       Navigator.pop(context, nameController.text);

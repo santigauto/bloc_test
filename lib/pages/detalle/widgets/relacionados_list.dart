@@ -48,6 +48,8 @@ class _RelacionadosState extends State<Relacionados> {
     super.initState();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Column(

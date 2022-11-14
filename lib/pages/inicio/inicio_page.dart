@@ -1,13 +1,16 @@
 import 'package:bloc_test/bloc/conexion/conexion_bloc.dart';
 import 'package:bloc_test/bloc/personajes/personajes_bloc.dart';
+
 import 'package:bloc_test/models/personaje/personaje_model.dart';
-import 'package:bloc_test/pages/inicio/widgets/formulario.dart';
 import 'package:bloc_test/services/personajes_service.dart';
+
+import 'package:bloc_test/pages/inicio/widgets/formulario.dart';
 import 'package:bloc_test/widgets/carta.dart';
 import 'package:bloc_test/widgets/buscador.dart';
 import 'package:bloc_test/widgets/no_data_banner.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 
 class InicioPage extends StatefulWidget {
   const InicioPage({Key? key}) : super(key: key);
@@ -18,11 +21,37 @@ class InicioPage extends StatefulWidget {
 
 class _InicioPageState extends State<InicioPage> {
   final ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
   }
+
+/*     Future fetchData() async {
+
+    if ( isLoading ) return;
+
+    isLoading = true;
+    setState(() {});
+
+    await Future.delayed( const Duration( seconds: 3 ));
+
+    final personajesBloc = BlocProvider.of<PersonajesBloc>(context);
+    personajesBloc.add( PersonajesEventGetMore() );
+
+    isLoading = false;
+    setState(() {});
+
+    if ( _scrollController.position.pixels + 100 <= _scrollController.position.maxScrollExtent ) return;
+
+    _scrollController.animateTo(
+      _scrollController.position.pixels + 120, 
+      duration: const Duration( milliseconds: 300 ), 
+      curve: Curves.fastOutSlowIn
+    );
+  }
+     */
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +60,12 @@ class _InicioPageState extends State<InicioPage> {
       builder: (context, state) {
         return BlocProvider(
       create: (context) =>
-          PersonajesBloc(RepositoryProvider.of<PersonajesRepo>(context))
-            ..add(LoadingPersonajesEvent()),
+          PersonajesBloc(repository: RepositoryProvider.of<PersonajesRepo>(context))
+            ..add(const PersonajesEvent.initial()),
           child: Scaffold(
           appBar: _appBar(state.conexion),
           body: (state.conexion)
-              ? _bodyWithConnection(size)
+              ? _bodyWithConnection(size, context)
               : _bodyWithoutConnection(), // _lista(size),
           floatingActionButton:
               state.conexion ? _floatingButton(context) : null,
@@ -68,42 +97,22 @@ class _InicioPageState extends State<InicioPage> {
     );
   }
 
-  Widget _bodyWithConnection(Size size) {
+  Widget _bodyWithConnection(Size size, BuildContext context) {
     return BlocBuilder<PersonajesBloc, PersonajesState>(
-        builder: (context, state)  {
-          switch (state.runtimeType) {
-            case PersonajesInicialState:
-              return const NoDataBanner();
-            case LoadingPersonajesState:
-              return const Center(child: CircularProgressIndicator());
-            case PersonajesFetchState:
-            List<Personaje> pers = state.props[0] as List<Personaje>;
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const ScrollPhysics(),
-                controller: _scrollController
-                  ..addListener(() {
-                    if (_scrollController.offset ==
-                        _scrollController.position.maxScrollExtent) {
-                          //TODO cargar mas personajes
-
-                          RepositoryProvider.of<PersonajesRepo>(context).getStreamPersonajes.listen((event) {
-                            BlocProvider.of<PersonajesBloc>(context).add(
-                              FetchPersonajesEvent(event.results!)
-                            );
-                          }); //me sobreescribe la lista, no adhiere
-                    }
-                  }),
-                itemCount: pers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return CartaWidget(personaje: pers[index]);
-                },
-                );
-            case PersonajesAddState:
-              return const Center(child: Text('PersonajesAddState'));
-            default:
-              return const Center(child: CircularProgressIndicator());
-          }}
+        builder: (context, state) => state.map(
+          initial: (_) {BlocProvider.of<PersonajesBloc>(context).add(const PersonajesEvent.initial());
+            return const NoDataBanner();
+          }, 
+          loading: (_) => const Center(child: CircularProgressIndicator()), 
+          loaded: (state) => _lista(state.personajes.results!, size),
+          error: (_) => const NoDataBanner(), 
+          searching: (state) => const Center(child: CircularProgressIndicator()),
+          searched: (state) => _lista(state.personajes.results!, size),
+          created: (_) {
+            BlocProvider.of<PersonajesBloc>(context).add(const PersonajesEvent.initial());
+            return const NoDataBanner();
+          },
+    )
     );
   }
 
@@ -131,6 +140,22 @@ class _InicioPageState extends State<InicioPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+  _lista(List<Personaje>personajes, size){
+    return RefreshIndicator(
+      onRefresh: () async {
+        final personajesBloc = BlocProvider.of<PersonajesBloc>(context);
+        personajesBloc.add( const PersonajesEvent.initial() );
+      },
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: personajes.length,
+        itemBuilder: (context, index) {
+          final personaje = personajes[index];
+          return CartaWidget(personaje: personaje);
+        },
+      ),
+    );
   }
 
 
