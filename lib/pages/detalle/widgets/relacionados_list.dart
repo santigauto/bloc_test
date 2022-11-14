@@ -90,13 +90,13 @@ class _RelacionadosState extends State<Relacionados> {
       future: _especiesService.getEspecies(listaEspecie),
       builder: (BuildContext context, AsyncSnapshot<List<Especie>> snapshot) {
         if (snapshot.hasData) {
-          return ExpansionTile(
-            leading: Icon(Icons.public), //icono planeta
+          return (snapshot.data!.isNotEmpty)? ExpansionTile(
+            leading: const Icon(Icons.public), //icono planeta
             title: const Text('Especies'),
             children: snapshot.data!
                 .map((e) => ListTile(title: Text(e.name ?? '')))
                 .toList(),
-          );
+          ) : const SizedBox();
         } else {
           return const ListTile(
             leading: Icon(Icons.public),
@@ -111,13 +111,13 @@ class _RelacionadosState extends State<Relacionados> {
       stream: _peliculasService.peliculasStream,
       builder: (BuildContext context, AsyncSnapshot<List<Pelicula>> snapshot) {
         if (snapshot.hasData) {
-          return ExpansionTile(
+          return (snapshot.data!.isNotEmpty)?ExpansionTile(
             leading: const Icon(Icons.movie),
             title: const Text('Peliculas'),
             children: snapshot.data!
                 .map((e) => ListTile(title: Text(e.title ?? '')))
                 .toList(),
-          );
+          ): const SizedBox();
         } else {
           return const ListTile(
             leading: Icon(Icons.movie),
@@ -132,13 +132,13 @@ class _RelacionadosState extends State<Relacionados> {
       stream: _navesService.navesStream,
       builder: (BuildContext context, AsyncSnapshot<List<Nave>> snapshot) {
         if (snapshot.hasData) {
-          return ExpansionTile(
+          return(snapshot.data!.isNotEmpty)? ExpansionTile(
             leading: const Icon(Icons.rocket),
             title: const Text('Naves'),
             children: snapshot.data!
                 .map((e) => ListTile(title: Text(e.name ?? '')))
                 .toList(),
-          );
+          ):const SizedBox();
         } else {
           return const ListTile(
               leading: Icon(Icons.rocket),
@@ -153,13 +153,13 @@ class _RelacionadosState extends State<Relacionados> {
       future: _vehiculosService.getVehiculos(widget.personaje.vehicles ?? []),
       builder: (BuildContext context, AsyncSnapshot<List<Vehiculo>> snapshot) {
         if (snapshot.hasData) {
-          return ExpansionTile(
+          return (snapshot.data!.isNotEmpty)?ExpansionTile(
             leading: const Icon(Icons.directions_car),
             title: const Text('Vehiculos'),
             children: snapshot.data!
                 .map((e) => ListTile(title: Text(e.name ?? '')))
                 .toList(),
-          );
+          ): const SizedBox();
         } else {
           return const ListTile(
             leading: Icon(Icons.directions_car),
